@@ -1,0 +1,55 @@
+// Topbar Buttons (Theme Toggle, Search)
+
+// Shared style for icon buttons in the topbar
+.topbar-button {
+    background: none;
+    border: none;
+    color: var(--topbar-text);
+    cursor: pointer;
+    padding: $padding-4 $padding-8;
+    border-radius: $border-radius;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: var(--topbar-hover-bg);
+    }
+}
+
+// Theme toggle button
+.theme-toggle {
+    @extend .topbar-button;
+
+    .sun-icon,
+    .moon-icon {
+        display: none;
+    }
+}
+
+:root[data-theme="dark"] .theme-toggle {
+    .auto-icon {
+        display: none;
+    }
+    .sun-icon {
+        display: block;
+    }
+}
+
+:root[data-theme="light"] .theme-toggle {
+    .auto-icon {
+        display: none;
+    }
+    .moon-icon {
+        display: block;
+    }
+}
+
+// Syntax highlighting overrides for manual theme switching
+:root[data-theme="light"] pre {
+    background: #fafafa !important;
+}
+
+:root[data-theme="dark"] pre {
+    background: #2b303b !important;
+}

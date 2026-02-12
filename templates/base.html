@@ -1,0 +1,181 @@
+{# Import macros #}
+{% import "macros/toc.html" as toc_macros %}
+{% import "macros/menu.html" as menu_macros %}
+
+<!DOCTYPE html>
+{% set course_theme = config.extra.course_theme | default(value="auto") %}
+{% if course_theme != "auto" and course_theme != "light" and course_theme != "dark" %}
+  {% set course_theme = "auto" %}
+{% endif %}
+
+<html lang="{{ config.default_language }}" dir="ltr"{% if course_theme != "auto" %} data-theme="{{ course_theme }}"{% endif %}>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {% if page.description %}
+    <meta name="description" content="{{ page.description }}">
+  {% elif page.summary %}
+    <meta name="description" content="{{ page.summary }}">
+  {% elif section.description %}
+    <meta name="description" content="{{ section.description }}">
+  {% endif %}
+
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#343a40" media="(prefers-color-scheme: dark)">
+
+  <title>
+    {% block title %}
+      {% if page.title %}
+        {{ page.title }} | {{ config.title }}
+      {% elif section.title %}
+        {{ section.title }} | {{ config.title }}
+      {% else %}
+        {{ config.title }}
+      {% endif %}
+    {% endblock title %}
+  </title>
+
+  {# Favicons — override by placing your own files in static/ #}
+  <link rel="icon" type="image/svg+xml" href="{{ get_url(path="favicon.svg") }}">
+  <link rel="shortcut icon" href="{{ get_url(path="favicon.ico") }}">
+
+  <link rel="stylesheet" href="{{ get_url(path="course-page.css") }}">
+
+  {% if config.extra.course_katex | default(value=false) %}
+  <link rel="stylesheet" href="{{ get_url(path="katex/katex.min.css") }}">
+  <script defer src="{{ get_url(path="katex/katex.min.js") }}"></script>
+  <script defer src="{{ get_url(path="katex/auto-render.min.js") }}"
+          onload="renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false}
+            ]
+          });"></script>
+  {% endif %}
+
+  {# Syntax highlighting: load both themes, JS picks the right one #}
+  <link id="syntax-theme-light" rel="stylesheet" href="{{ get_url(path="syntax-theme-light.css") }}" media="screen">
+  <link id="syntax-theme-dark" rel="stylesheet" href="{{ get_url(path="syntax-theme-dark.css") }}" media="screen and (prefers-color-scheme: dark)">
+  <script>
+    // Immediately apply syntax theme based on saved preference to avoid flash
+    (function() {
+      var savedTheme = localStorage.getItem("theme");
+      var lightLink = document.getElementById("syntax-theme-light");
+      var darkLink = document.getElementById("syntax-theme-dark");
+      var configuredTheme = "{{ course_theme }}";
+
+      // When there's no saved theme, apply configured default.
+      if (!savedTheme) {
+        if (configuredTheme === "light" || configuredTheme === "dark") {
+          document.documentElement.setAttribute("data-theme", configuredTheme);
+        }
+      }
+
+      if (savedTheme === "dark") {
+        lightLink.media = "not all";
+        darkLink.media = "screen";
+      } else if (savedTheme === "light") {
+        lightLink.media = "screen";
+        darkLink.media = "not all";
+      } else if (configuredTheme === "dark") {
+        lightLink.media = "not all";
+        darkLink.media = "screen";
+      } else if (configuredTheme === "light") {
+        lightLink.media = "screen";
+        darkLink.media = "not all";
+      }
+      // Otherwise keep default media queries for system preference
+    })();
+  </script>
+
+</head>
+
+<body>
+  {# Current path for menu highlighting #}
+  {% if page %}
+    {% set current_path = page.path %}
+  {% elif section %}
+    {% set current_path = section.path %}
+  {% else %}
+    {% set current_path = "" %}
+  {% endif %}
+
+  {# ToC settings #}
+  {% if page %}
+    {% set show_toc = page.extra.course_toc | default(value=true) %}
+    {% set current_toc = page.toc %}
+  {% elif section %}
+    {% set show_toc = section.extra.course_toc | default(value=true) %}
+    {% set current_toc = section.toc %}
+  {% else %}
+    {% set show_toc = false %}
+    {% set current_toc = [] %}
+  {% endif %}
+
+  {% include "partials/topbar.html" %}
+
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+
+  <main class="container flex">
+    {# Overlays #}
+    <label for="menu-control" class="sidebar-overlay sidebar-overlay-menu" aria-label="Close menu"></label>
+    <label for="toc-control" class="sidebar-overlay sidebar-overlay-toc" aria-label="Close table of contents"></label>
+
+    {# Left sidebar #}
+    <aside class="course-menu" id="course-menu">
+      <div class="course-menu-content">
+        {% include "menu.html" %}
+      </div>
+    </aside>
+
+    {# Mobile ToC #}
+    {% if show_toc and current_toc %}
+    <aside class="course-toc-mobile">
+      <div class="course-toc-mobile-content">
+        <nav id="TableOfContentsMobile">
+          {{ toc_macros::render_toc(toc=current_toc) }}
+        </nav>
+      </div>
+    </aside>
+    {% endif %}
+
+    {# Main content #}
+    <div class="course-page">
+      <header class="course-header">
+        {% include "partials/header.html" %}
+      </header>
+
+      {% block content %}
+        <article class="markdown">
+          {% if page %}
+            {{ page.content | safe }}
+          {% elif section and section.content %}
+            {{ section.content | safe }}
+          {% endif %}
+        </article>
+      {% endblock content %}
+
+      <footer class="course-footer">
+        {% include "partials/footer.html" %}
+      </footer>
+    </div>
+
+    {# Desktop ToC #}
+    {% if show_toc and current_toc %}
+    <aside class="course-toc">
+      <div class="course-toc-content">
+        <nav id="TableOfContents">
+          {{ toc_macros::render_toc(toc=current_toc) }}
+        </nav>
+      </div>
+    </aside>
+    {% endif %}
+  </main>
+
+    {% include "partials/assets.html" %}
+</body>
+
+</html>

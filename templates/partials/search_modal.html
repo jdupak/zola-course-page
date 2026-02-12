@@ -1,0 +1,62 @@
+{# Search modal markup. Render only when enabled. #}
+{% if config.extra.course_search %}
+<div
+    class="course-search-modal hidden"
+    id="course-search-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="course-search-title"
+    data-max-results="20"
+>
+    <div class="course-search-modal__backdrop" data-course-search-close></div>
+
+    <div class="course-search-modal__dialog" role="document">
+        <div class="course-search-modal__header">
+            <strong id="course-search-title">Search</strong>
+            <button
+                type="button"
+                class="course-search-modal__close"
+                aria-label="Close search"
+                title="Close"
+                data-course-search-close
+            >
+                ×
+            </button>
+        </div>
+
+        <div class="course-search-modal__body">
+            <label class="course-search-modal__label" for="course-search-input">
+                Search query
+            </label>
+
+            <input
+                id="course-search-input"
+                class="course-search-modal__input"
+                type="search"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                placeholder="Type to search…"
+            />
+
+            <div class="course-search-modal__status" aria-live="polite">
+                <span
+                    class="course-search-modal__status-text"
+                    id="course-search-status"
+                ></span>
+            </div>
+
+            <ul
+                class="course-search-modal__results"
+                id="course-search-results"
+                role="listbox"
+                aria-label="Search results"
+            ></ul>
+        </div>
+
+        <div class="course-search-modal__footer">
+            <small>↑/↓ to navigate, Enter to open, Esc to close</small>
+        </div>
+    </div>
+</div>
+{% endif %}

@@ -1,0 +1,18 @@
+// Theme application (CSS custom properties)
+//
+// Default: light. System dark preference honored unless user overrides.
+// data-theme attribute set by theme-toggle.js takes precedence.
+
+:root {
+    @include theme-light;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        @include theme-dark;
+    }
+}
+
+:root[data-theme="dark"] {
+    @include theme-dark;
+}

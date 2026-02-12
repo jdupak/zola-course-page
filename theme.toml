@@ -1,0 +1,69 @@
+name = "course-page"
+
+description = "Course Page — a clean, course-oriented Zola theme with left navigation and optional ToC"
+
+tags = ["course", "documentation", "sidebar", "toc"]
+license = "MIT"
+homepage = "https://github.com/jdupak/zola-course-page"
+min_version = "0.19.0"
+
+[author]
+name = "Jakub Dupak"
+homepage = "https://jakubdupak.com"
+email = "dev@jakubdupak.com"
+
+# Theme configuration surface.
+# These values are merged into the end-user `config.toml` under `[extra]`.
+# All configuration keys use snake_case naming convention.
+[extra]
+# Branding
+logo_path = ""
+logo_text_path = ""
+logo_alt = ""
+logo_text_alt = ""
+
+# Subject information
+subject_name = ""
+subject_code = ""
+
+# Links (top bar)
+timetable_link = ""
+timetable_label = "Timetable"
+
+brute_link = ""
+brute_label = "Submissions"
+
+forum_link = ""
+forum_label = "Issues"
+
+gitlab_link = ""
+gitlab_label = "Repository"
+
+# Footer text
+footer_error_text = "Is there an issue on this page?"
+footer_edit_text = "Edit this page"
+footer_questions_text = "Questions or feedback?"
+footer_feedback_text = "Let us know"
+footer_feedback_prefix = "Feedback about:"
+
+# Repository integration (for edit links and issue creation)
+course_repo = ""
+course_edit_path = ""
+# Custom issue URL template. Use {title} as placeholder for the issue title.
+# Default (GitLab): course_repo + "/issues/new?issue[title]={title}"
+# GitHub example: "https://github.com/user/repo/issues/new?title={title}"
+course_issue_url = ""
+
+# Feature flags
+# Theme default: "light" | "dark" | "auto"
+# - "auto" follows system preference (prefers-color-scheme)
+# - "light"/"dark" force a default theme for first-time visitors
+# - user choice (toggle) is persisted in localStorage and takes precedence
+course_theme = "auto"
+course_search = false
+course_katex = false
+
+# Page-level frontmatter options (set in page/section front matter under [extra]):
+# - course_toc = true/false           # Show/hide table of contents (default: true)
+# - course_hidden = true/false        # Hide page/section from menu (default: false)
+# - course_collapse_section = true/false  # Make section collapsible in menu (default: false)

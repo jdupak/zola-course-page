@@ -1,0 +1,58 @@
+// Code Blocks and Copy Button
+
+.markdown pre {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    tab-size: 4;
+}
+
+// Wrapper keeps the copy button outside the scrollable <pre>
+.code-block-wrapper {
+    position: relative;
+}
+
+// Copy button for code blocks
+.copy-button {
+    position: absolute;
+    top: $padding-8;
+    right: $padding-8;
+    padding: $padding-4 $padding-8;
+    background: var(--gray-200);
+    border: 1px solid var(--gray-200);
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-size: $font-size-12;
+    color: var(--body-font-color);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+
+    &:hover {
+        background: var(--gray-500);
+    }
+
+    &.copied {
+        background: #4caf50;
+        color: white;
+        border-color: #4caf50;
+    }
+}
+
+.code-block-wrapper:hover .copy-button {
+    opacity: 1;
+}
+
+// Plain code blocks (without language) — reset syntax highlight colors
+.markdown pre:not([data-lang]) {
+    background-color: var(--gray-100) !important;
+    color: inherit !important;
+
+    code {
+        background: none;
+        color: inherit;
+    }
+
+    span {
+        color: inherit !important;
+    }
+}

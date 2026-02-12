@@ -1,0 +1,34 @@
+<div class="flex flex-wrap justify-between">
+  {% if config.extra.course_repo and config.extra.course_edit_path %}
+    {% if page %}
+      {% set edit_path = page.relative_path %}
+      {% set page_title = page.title %}
+    {% elif section %}
+      {% set edit_path = section.relative_path %}
+      {% set page_title = section.title %}
+    {% endif %}
+
+    {% if edit_path %}
+    <div>
+      <p>{{ config.extra.footer_error_text }}</p>
+      <a class="flex align-center" href="{{ config.extra.course_repo | safe }}/{{ config.extra.course_edit_path | safe }}/{{ edit_path }}" target="_blank" rel="noopener">
+        <img src="{{ get_url(path="svg/edit.svg") }}" class="course-icon" alt="Edit" />
+        <span>{{ config.extra.footer_edit_text }}</span>
+      </a>
+    </div>
+    <div>
+      <p>{{ config.extra.footer_questions_text }}</p>
+      {% set issue_title = config.extra.footer_feedback_prefix ~ " " ~ page_title ~ " (" ~ edit_path ~ ")" %}
+      {% if config.extra.course_issue_url %}
+        {% set issue_url = config.extra.course_issue_url | replace(from="{title}", to=issue_title | urlencode) %}
+      {% else %}
+        {% set issue_url = config.extra.course_repo ~ "/issues/new?issue[title]=" ~ issue_title | urlencode %}
+      {% endif %}
+      <a class="flex align-center" href="{{ issue_url | safe }}" target="_blank" rel="noopener">
+        <img src="{{ get_url(path="svg/feedback.svg") }}" class="course-icon" alt="Feedback" />
+        <span>{{ config.extra.footer_feedback_text }}</span>
+      </a>
+    </div>
+    {% endif %}
+  {% endif %}
+</div>

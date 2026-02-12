@@ -1,0 +1,16 @@
+{# Asset loading (scripts and feature-gated assets) #}
+
+<script src="{{ get_url(path='menu-reset.js') }}" defer></script>
+<script src="{{ get_url(path='sidebar-a11y.js') }}" defer></script>
+<script src="{{ get_url(path='course-interactions.js') }}" defer></script>
+<script src="{{ get_url(path='code-copy.js') }}" defer></script>
+<script src="{{ get_url(path='theme-toggle.js') }}" defer></script>
+
+{% if config.extra.course_search %}
+  {% include "partials/search_modal.html" %}
+
+  {% set search_lang = config.default_language %}
+  <script src="{{ get_url(path='elasticlunr.min.js') }}" defer></script>
+  <script src="{{ get_url(path='search_index.' ~ search_lang ~ '.js') }}" defer></script>
+  <script src="{{ get_url(path='search-modal.js') }}" defer></script>
+{% endif %}

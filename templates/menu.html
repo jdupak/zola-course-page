@@ -1,0 +1,36 @@
+<nav>
+    {% set root = get_section(path="_index.md") %}
+
+    <ul>
+        <li>
+            <a
+                href="{{ root.permalink | safe }}"
+                class="{% if current_path == root.path %}active{% endif %}"
+                {% if current_path == root.path %}aria-current="page"{% endif %}
+            >
+                {{ root.title | default(value=config.title) }}
+            </a>
+        </li>
+
+        {# Render all top-level subsections using recursive macro #}
+        {% for section_path in root.subsections %}
+            {{ menu_macros::render_section(section=section_path, current_path=current_path) }}
+        {% endfor %}
+
+        {# Render top-level pages (not in any section) #}
+        {% for page in root.pages %}
+            {% set page_hidden = page.extra.course_hidden | default(value=false) %}
+            {% if not page_hidden %}
+                <li>
+                    <a
+                        href="{{ page.permalink | safe }}"
+                        class="{% if current_path == page.path %}active{% endif %}"
+                        {% if current_path == page.path %}aria-current="page"{% endif %}
+                    >
+                        {{ page.title }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>

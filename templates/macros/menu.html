@@ -1,0 +1,115 @@
+{# Render a section and its children (up to 3 levels deep) #}
+{% macro render_section(section, current_path) %}
+  {% set subsection = get_section(path=section) %}
+  {% set is_hidden = subsection.extra.course_hidden | default(value=false) %}
+  {% if not is_hidden %}
+    <li>
+      {# Render section link #}
+      {% set is_collapsible = subsection.extra.course_collapse_section | default(value=false) %}
+      {% if is_collapsible %}
+        {% set section_id = subsection.permalink | slugify %}
+        {% set is_current = current_path is starting_with(subsection.path) %}
+        <input type="checkbox" id="section-{{ section_id }}" class="toggle" {% if is_current %}checked{% endif %} />
+        <label for="section-{{ section_id }}" class="flex justify-between">
+          <a href="{{ subsection.permalink | safe }}" class="{% if current_path == subsection.path %}active{% endif %}" {% if current_path == subsection.path %}aria-current="page"{% endif %}>
+            {{ subsection.title }}
+          </a>
+        </label>
+      {% else %}
+        <a href="{{ subsection.permalink | safe }}" class="{% if current_path == subsection.path %}active{% endif %}" {% if current_path == subsection.path %}aria-current="page"{% endif %}>
+          {{ subsection.title }}
+        </a>
+      {% endif %}
+
+      {# Render nested subsections #}
+      {% if subsection.subsections %}
+        <ul>
+          {% for nested_section in subsection.subsections %}
+            {% set nested_subsection = get_section(path=nested_section) %}
+            {% set nested_is_hidden = nested_subsection.extra.course_hidden | default(value=false) %}
+            {% if not nested_is_hidden %}
+              <li>
+                {# Render nested section link #}
+                {% set nested_is_collapsible = nested_subsection.extra.course_collapse_section | default(value=false) %}
+                {% if nested_is_collapsible %}
+                  {% set nested_section_id = nested_subsection.permalink | slugify %}
+                  {% set nested_is_current = current_path is starting_with(nested_subsection.path) %}
+                  <input type="checkbox" id="section-{{ nested_section_id }}" class="toggle" {% if nested_is_current %}checked{% endif %} />
+                  <label for="section-{{ nested_section_id }}" class="flex justify-between">
+                    <a href="{{ nested_subsection.permalink | safe }}" class="{% if current_path == nested_subsection.path %}active{% endif %}" {% if current_path == nested_subsection.path %}aria-current="page"{% endif %}>
+                      {{ nested_subsection.title }}
+                    </a>
+                  </label>
+                {% else %}
+                  <a href="{{ nested_subsection.permalink | safe }}" class="{% if current_path == nested_subsection.path %}active{% endif %}" {% if current_path == nested_subsection.path %}aria-current="page"{% endif %}>
+                    {{ nested_subsection.title }}
+                  </a>
+                {% endif %}
+
+                {# Render pages in nested section #}
+                {% if nested_subsection.pages %}
+                  <ul>
+                    {% for page in nested_subsection.pages %}
+                      {% if not page.extra.course_hidden | default(value=false) %}
+                        <li>
+                          <a href="{{ page.permalink | safe }}" class="{% if current_path == page.path %}active{% endif %}" {% if current_path == page.path %}aria-current="page"{% endif %}>
+                            {{ page.title }}
+                          </a>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+
+                {# Render deeper nested subsections (level 3) #}
+                {% if nested_subsection.subsections %}
+                  <ul>
+                    {% for deep_section in nested_subsection.subsections %}
+                      {% set deep_subsection = get_section(path=deep_section) %}
+                      {% if not deep_subsection.extra.course_hidden | default(value=false) %}
+                        <li>
+                          <a href="{{ deep_subsection.permalink | safe }}" class="{% if current_path == deep_subsection.path %}active{% endif %}" {% if current_path == deep_subsection.path %}aria-current="page"{% endif %}>
+                            {{ deep_subsection.title }}
+                          </a>
+                          {# Render pages in deep section #}
+                          {% if deep_subsection.pages %}
+                            <ul>
+                              {% for page in deep_subsection.pages %}
+                                {% if not page.extra.course_hidden | default(value=false) %}
+                                  <li>
+                                    <a href="{{ page.permalink | safe }}" class="{% if current_path == page.path %}active{% endif %}" {% if current_path == page.path %}aria-current="page"{% endif %}>
+                                      {{ page.title }}
+                                    </a>
+                                  </li>
+                                {% endif %}
+                              {% endfor %}
+                            </ul>
+                          {% endif %}
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {# Render pages in top-level section #}
+      {% if subsection.pages %}
+        <ul>
+          {% for page in subsection.pages %}
+            {% if not page.extra.course_hidden | default(value=false) %}
+              <li>
+                <a href="{{ page.permalink | safe }}" class="{% if current_path == page.path %}active{% endif %}" {% if current_path == page.path %}aria-current="page"{% endif %}>
+                  {{ page.title }}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </li>
+  {% endif %}
+{% endmacro render_section %}

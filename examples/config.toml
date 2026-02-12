@@ -1,0 +1,77 @@
+# Minimal starter config for a course site using the Course Page theme
+#
+# Copy this into your course project as `config.toml` (or merge the parts you need).
+# Then add your course content under `content/`.
+
+base_url = "https://example.com/"
+title = "MY_COURSE_CODE"
+default_language = "en"
+output_dir = "public"
+
+# Enable the theme
+theme = "course-page"
+
+compile_sass = true
+
+# Required when course_search = true; safe to leave enabled even when
+# course_search is false (Zola will simply skip index generation).
+build_search_index = true
+
+# If you use archive directories (e.g. project.zip/) in content/, tell Zola
+# to ignore their contents so it does not try to parse them as pages.
+ignored_content = ["**/*.zip/**", "**/*.tar.gz/**", "**/*.tgz/**"]
+
+[markdown]
+highlight_code = true
+highlight_theme = "css"
+external_links_target_blank = true
+smart_punctuation = false
+insert_anchor_links = "right"
+
+[slugify]
+anchors = "on"
+
+[extra]
+# Repo + edit links (used by the header/footer partials)
+course_repo = "https://git.example.com/my/course"
+course_edit_path = "-/edit/main/content"
+
+# Custom issue URL template (optional).
+# Use {title} as placeholder for the auto-generated issue title.
+# Default (GitLab): course_repo + "/issues/new?issue[title]={title}"
+# GitHub example: "https://github.com/user/repo/issues/new?title={title}"
+# course_issue_url = ""
+
+# Course identity
+subject_name = "My Course"
+subject_code = "MY101"
+
+# Branding (override by placing your own files in static/)
+# logo_path = "cvut-symbol.svg"
+# logo_text_path = "fel-text.svg"
+# logo_alt = "ČVUT"
+# logo_text_alt = "FEL"
+
+# Topbar external links
+# timetable_link = "https://..."
+# timetable_label = "Timetable"
+
+# brute_link = "https://..."
+# brute_label = "BRUTE"
+
+# forum_link = "https://..."
+# forum_label = "Issues"
+
+# gitlab_link = "https://..."
+# gitlab_label = "Repository"
+
+# Footer text
+footer_error_text = "Is there an issue on this page?"
+footer_edit_text = "Edit this page"
+footer_questions_text = "Questions or feedback?"
+footer_feedback_text = "Let us know"
+footer_feedback_prefix = "Feedback about:"
+
+# Theme features
+course_theme = "auto"
+course_search = false

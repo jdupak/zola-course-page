@@ -1,0 +1,43 @@
+<div class="flex align-center justify-between">
+  <label
+    for="menu-control"
+    role="button"
+    aria-controls="course-menu"
+    aria-expanded="false"
+    aria-label="Open navigation menu"
+  >
+    <img src="{{ get_url(path="svg/menu.svg") }}" class="course-icon" alt="Menu" tabindex="-1" />
+  </label>
+
+  <strong>
+    {% if page %}
+      {{ page.title }}
+    {% elif section %}
+      {{ section.title }}
+    {% else %}
+      {{ config.title }}
+    {% endif %}
+  </strong>
+
+  <label
+    for="toc-control"
+    role="button"
+    aria-controls="TableOfContentsMobile"
+    aria-expanded="false"
+    aria-label="Open table of contents"
+  >
+    {% if page %}
+      {% set show_toc = page.extra.course_toc | default(value=true) %}
+      {% set toc = page.toc %}
+    {% elif section %}
+      {% set show_toc = section.extra.course_toc | default(value=true) %}
+      {% set toc = section.toc %}
+    {% else %}
+      {% set show_toc = false %}
+      {% set toc = false %}
+    {% endif %}
+    {% if show_toc and toc %}
+      <img src="{{ get_url(path="svg/toc.svg") }}" class="course-icon" alt="Table of Contents" tabindex="-1" />
+    {% endif %}
+  </label>
+</div>
